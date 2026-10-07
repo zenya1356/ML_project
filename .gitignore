@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Virtual environment
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated artifacts
+results/*
+submissions/*
+
+# Keep directories
+!results/.gitkeep
+!submissions/.gitkeep
+
+# Local datasets and trained models
+data/
+artifacts/

@@ -1,0 +1,21 @@
+task: regression
+
+data:
+  train_path: data/regression/train.csv
+  test_path: data/regression/test.csv
+  submission_template_path: data/regression/sample_submission.csv
+  target: SalePrice
+  id_column: Id
+
+metric:
+  name: rmsle
+  direction: minimize
+
+validation:
+  strategy: kfold
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+
+output:
+  submission_path: submissions/regression_submission.csv

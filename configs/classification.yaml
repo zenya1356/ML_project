@@ -1,0 +1,21 @@
+task: classification
+
+data:
+  train_path: data/classification/train.csv
+  test_path: data/classification/test.csv
+  submission_template_path: data/classification/gender_submission.csv
+  target: Survived
+  id_column: PassengerId
+
+metric:
+  name: accuracy
+  direction: maximize
+
+validation:
+  strategy: stratified_kfold
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+
+output:
+  submission_path: submissions/classification_submission.csv
