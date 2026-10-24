@@ -26,3 +26,20 @@ submissions/*
 # Local datasets and trained models
 data/
 artifacts/
+
+# Reproducible generated copies; source recipes live in checklist.py.
+/configs/checklist/
+
+# Local credentials and environment settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+kaggle.json
+
+# Local workspace instructions and working notes
+/.codex/
+/AGENTS.md
+/PROJECT_PLAN.md
+/PROJECT_STATUS.md

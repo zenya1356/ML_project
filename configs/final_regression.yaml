@@ -1,0 +1,202 @@
+task: regression
+data:
+  parsing_mode: housing
+  train_path: data/regression/train.csv
+  test_path: data/regression/test.csv
+  submission_template_path: data/regression/sample_submission.csv
+  target: SalePrice
+  id_column: Id
+features:
+  numeric:
+  - LotFrontage
+  - LotArea
+  - OverallQual
+  - OverallCond
+  - YearBuilt
+  - YearRemodAdd
+  - MasVnrArea
+  - BsmtFinSF1
+  - BsmtFinSF2
+  - BsmtUnfSF
+  - TotalBsmtSF
+  - 1stFlrSF
+  - 2ndFlrSF
+  - LowQualFinSF
+  - GrLivArea
+  - BsmtFullBath
+  - BsmtHalfBath
+  - FullBath
+  - HalfBath
+  - BedroomAbvGr
+  - KitchenAbvGr
+  - TotRmsAbvGrd
+  - Fireplaces
+  - GarageYrBlt
+  - GarageCars
+  - GarageArea
+  - WoodDeckSF
+  - OpenPorchSF
+  - EnclosedPorch
+  - 3SsnPorch
+  - ScreenPorch
+  - PoolArea
+  - MiscVal
+  - MoSold
+  - YrSold
+  categorical:
+  - MSSubClass
+  - MSZoning
+  - Street
+  - Alley
+  - LotShape
+  - LandContour
+  - Utilities
+  - LotConfig
+  - LandSlope
+  - Neighborhood
+  - Condition1
+  - Condition2
+  - BldgType
+  - HouseStyle
+  - RoofStyle
+  - RoofMatl
+  - Exterior1st
+  - Exterior2nd
+  - MasVnrType
+  - ExterQual
+  - ExterCond
+  - Foundation
+  - BsmtQual
+  - BsmtCond
+  - BsmtExposure
+  - BsmtFinType1
+  - BsmtFinType2
+  - Heating
+  - HeatingQC
+  - CentralAir
+  - Electrical
+  - KitchenQual
+  - Functional
+  - FireplaceQu
+  - GarageType
+  - GarageFinish
+  - GarageQual
+  - GarageCond
+  - PavedDrive
+  - PoolQC
+  - Fence
+  - MiscFeature
+  - SaleType
+  - SaleCondition
+  drop: []
+feature_engineering:
+  simple_features: false
+preprocessing:
+  numeric_imputation: median
+  numeric_missing_indicators: false
+model:
+  name: catboost
+  target_transform: log
+  params:
+    iterations: 200
+    learning_rate: 0.1
+    depth: 6
+    l2_leaf_reg: 3.0
+    loss_function: RMSE
+    random_seed: 42
+    thread_count: 2
+    task_type: CPU
+    use_best_model: false
+    allow_writing_files: false
+    verbose: false
+baseline_models:
+  catboost:
+    iterations: 200
+    learning_rate: 0.05
+    depth: 6
+    l2_leaf_reg: 3.0
+    loss_function: RMSE
+    random_seed: 42
+    thread_count: 2
+    task_type: CPU
+    use_best_model: false
+    allow_writing_files: false
+    verbose: false
+  lightgbm:
+    n_estimators: 200
+    learning_rate: 0.05
+    num_leaves: 15
+    max_depth: 6
+    min_child_samples: 20
+    reg_lambda: 1.0
+    objective: regression
+    random_state: 42
+    n_jobs: 2
+    deterministic: true
+    force_col_wise: true
+    verbosity: -1
+  xgboost:
+    n_estimators: 200
+    learning_rate: 0.05
+    max_depth: 4
+    reg_lambda: 1.0
+    subsample: 1.0
+    colsample_bytree: 1.0
+    objective: reg:squarederror
+    eval_metric: rmse
+    tree_method: hist
+    device: cpu
+    random_state: 42
+    n_jobs: 2
+  stacking:
+    inner_splits: 3
+    random_state: 42
+    meta_regularization: 1.0
+  torch_mlp:
+    hidden_sizes:
+    - 64
+    - 32
+    dropout: 0.1
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    batch_size: 64
+    max_epochs: 150
+    patience: 15
+    min_delta: 0.0001
+    random_state: 42
+  dummy_regressor:
+    strategy: mean
+  linear_regression: {}
+  random_forest:
+    n_estimators: 200
+    min_samples_leaf: 2
+    max_features: 1.0
+    n_jobs: 2
+    random_state: 42
+  gradient_boosting:
+    n_estimators: 150
+    learning_rate: 0.05
+    max_depth: 3
+    min_samples_leaf: 5
+    random_state: 42
+  hist_gradient_boosting:
+    max_iter: 150
+    learning_rate: 0.05
+    max_leaf_nodes: 15
+    min_samples_leaf: 20
+    l2_regularization: 1.0
+    early_stopping: false
+    random_state: 42
+metric:
+  name: rmse_log
+  direction: minimize
+validation:
+  strategy: kfold
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+  folds_path: artifacts/regression/folds.csv
+output:
+  artifacts_dir: artifacts/regression
+  experiments_path: results/regression_experiments.csv
+  submission_path: submissions/regression_submission.csv

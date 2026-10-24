@@ -1,7 +1,18 @@
-numpy
-pandas
-scikit-learn
-PyYAML
-Jupyter
-matplotlib
-seaborn
+# Primary dependencies installed in the working Python 3.12.10 environment.
+# Transitive dependencies are resolved by pip; this is not a full lockfile.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1+cpu
+numpy==2.5.3
+pandas==3.0.6
+scikit-learn==1.9.1
+scipy==1.18.1
+threadpoolctl==3.7.0
+joblib==1.6.0
+PyYAML==6.0.3
+jupyter==1.1.1
+ipykernel==7.4.0
+matplotlib==3.11.2
+seaborn==0.13.2
+catboost==1.2.10
+lightgbm==4.7.0
+xgboost==3.4.1

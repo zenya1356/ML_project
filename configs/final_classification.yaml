@@ -1,0 +1,74 @@
+task: classification
+data:
+  parsing_mode: default
+  train_path: data/classification/train.csv
+  test_path: data/classification/test.csv
+  submission_template_path: data/classification/gender_submission.csv
+  target: Survived
+  id_column: PassengerId
+features:
+  numeric:
+  - Age
+  - SibSp
+  - Parch
+  - Fare
+  categorical:
+  - Pclass
+  - Sex
+  - Embarked
+  drop:
+  - Name
+  - Ticket
+  - Cabin
+preprocessing:
+  numeric_imputation: median
+  numeric_missing_indicators: false
+model:
+  name: hist_gradient_boosting
+  target_transform: none
+  params:
+    max_iter: 150
+    learning_rate: 0.05
+    max_leaf_nodes: 15
+    min_samples_leaf: 20
+    l2_regularization: 1.0
+    early_stopping: false
+    random_state: 42
+baseline_models:
+  dummy_classifier:
+    strategy: prior
+  random_forest:
+    n_estimators: 200
+    min_samples_leaf: 2
+    max_features: sqrt
+    n_jobs: 2
+    random_state: 42
+  gradient_boosting:
+    n_estimators: 150
+    learning_rate: 0.05
+    max_depth: 3
+    min_samples_leaf: 5
+    random_state: 42
+  hist_gradient_boosting:
+    max_iter: 150
+    learning_rate: 0.05
+    max_leaf_nodes: 15
+    min_samples_leaf: 20
+    l2_regularization: 1.0
+    early_stopping: false
+    random_state: 42
+training:
+  prediction_threshold: 0.5
+metric:
+  name: accuracy
+  direction: maximize
+validation:
+  strategy: stratified_kfold
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+  folds_path: artifacts/classification/folds.csv
+output:
+  artifacts_dir: artifacts/classification
+  experiments_path: results/classification_experiments.csv
+  submission_path: submissions/classification_submission.csv
